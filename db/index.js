@@ -40,14 +40,22 @@ const finalProducts = new mongoose.Schema({
   MoQ: String,
   margin: String,
 });
+const enquiryForm = new mongoose.Schema({
+  productName: String,
+  EnquiredBy: String,
+  Quantity: String,
+  Unit: String
+});
 
 const User = mongoose.model("User", userSchema);
 const Products = mongoose.model("Products", product);
 const ProductDetails = mongoose.model("ProductDetails", productDetails);
 const FinalProducts = mongoose.model("FinalProducts", finalProducts);
+const EnquiryForm = mongoose.model("EnquiryForm", enquiryForm);
 module.exports = {
   User,
   Products,
   ProductDetails,
   FinalProducts,
+  EnquiryForm,
 };
