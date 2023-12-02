@@ -1,7 +1,8 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const { authenticateJwt, SECRET } = require("../middleware/auth");
-const { User, Products, ProductDetails } = require("../db");
+const { User, Products, ProductDetails, FinalProducts } = require("../db");
 const router = express.Router();
 
 router.get("/me", authenticateJwt, async (req, res) => {
@@ -114,6 +115,18 @@ router.post("/addProducts", authenticateJwt, async (req, res) => {
 router.get("/products", authenticateJwt, async (req, res) => {
   const products = await Products.find({ verified: true });
   console.log(products);
+  res.json({ products });
+});
+router.get("/ProductDetails/:productID", async (req, res) => {
+  var id = new mongoose.Types.ObjectId(req.params.productID);
+
+  const product = await Products.findById(id);
+  // const products = await Products.find({ verified: true });
+  console.log(id);
+  res.json({ product });
+});
+router.get("/allProducts", async (req, res) => {
+  const products = await FinalProducts.find({});
   res.json({ products });
 });
 

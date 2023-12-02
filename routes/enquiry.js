@@ -7,14 +7,17 @@ const router = express.Router();
 router.post("/product", async (req, res) => {
   const { ProductName, PhoneNumber, quantity, unit } = req.body;
   console.log(ProductName, PhoneNumber, quantity);
- const newEnquiry = new EnquiryForm({
-   productName: ProductName,
-   EnquiredBy: PhoneNumber,
-   Quantity: quantity,
-   Unit: unit,
- });
- await newEnquiry.save();
- res.json("success")
+  let time = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+  console.log(time);
+  const newEnquiry = new EnquiryForm({
+    productName: ProductName,
+    EnquiredBy: PhoneNumber,
+    Quantity: quantity,
+    Unit: unit,
+    time:String(time),
+  });
+  await newEnquiry.save();
+  res.json("success");
 });
 
 module.exports = router;

@@ -34,7 +34,39 @@ const productDetails = new mongoose.Schema({
   productSize: String,
 });
 const finalProducts = new mongoose.Schema({
+  _id: mongoose.ObjectId,
+  title: String,
+  margin: String,
+  moq: String,
+  price: String,
+  margin: String,
+  productimg1: String,
+  moq1: String,
+  moq1cost: String,
+  moq2: String,
+  moq2cost: String,
+  moq3: String,
+  moq3cost: String,
+  supplier: String,
+  locations: String,
+  marketexp: String,
+  shipping: String,
+  returns: String,
+  leadtime: String,
+  type: String,
+  packaging: String,
+  storage: String,
+  shelflife: String,
+  manufacturingplace: String,
+  supplyability: String,
+  samples: String,
+  manufacturing: String,
+});
+//products in add multiple products page.
+//cloudinary image link
+const productSchema = new mongoose.Schema({
   productName: String,
+  creator: String,
   imageLink: String,
   price: String,
   MoQ: String,
@@ -44,18 +76,41 @@ const enquiryForm = new mongoose.Schema({
   productName: String,
   EnquiredBy: String,
   Quantity: String,
-  Unit: String
+  Unit: String,
+  time: String,
 });
-
+const companyDetails = new mongoose.Schema({
+  pNumber: String,
+  pName: String,
+  AboutCompany: String,
+  GST: String,
+  YearPresence: String,
+  DistributionLocations: String,
+  shipping: String,
+  RnR: String,
+  Storage: String,
+  Sampling: String,
+  TPMWhiteLabelling: String,
+  pLife: String,
+  manufac: String,
+  capa: String,
+  pType: String,
+  pSize: String,
+  fssaiImage: String,
+});
 const User = mongoose.model("User", userSchema);
+const Company = mongoose.model("Company", companyDetails);
 const Products = mongoose.model("Products", product);
 const ProductDetails = mongoose.model("ProductDetails", productDetails);
 const FinalProducts = mongoose.model("FinalProducts", finalProducts);
+const SemiFinalProduct = mongoose.model("ProductSchema", productSchema);
 const EnquiryForm = mongoose.model("EnquiryForm", enquiryForm);
 module.exports = {
   User,
+  Company,
   Products,
   ProductDetails,
   FinalProducts,
   EnquiryForm,
+  SemiFinalProduct,
 };

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const express = require("express");
-const { User, Products, Admin } = require("../db");
+const { User, Products, Admin, FinalProducts } = require("../db");
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../middleware/auth");
 const { authenticateJwt } = require("../middleware/auth");
@@ -56,9 +56,21 @@ router.post("/addProduct", async (req, res) => {
   await product.save();
   res.json({ message: "Product added successfully", productID: product.id });
 });
+router.post("/addFinalProduct", async (req, res) => {
 
-router.get("/products", authenticateJwt, async (req, res) => {
-  const products = await Products.find({});
+  console.log("adding final product ");
+  console.log("adding final product ", req.body);
+  
+  const FinalProduct = new FinalProducts(req.body);
+  await FinalProduct.save();
+  res.json({
+    message: "Final Product added successfully",
+    productID: FinalProduct.id,
+  });
+});
+
+router.get("/allProducts", authenticateJwt, async (req, res) => {
+  const products = await FinalProducts.find({});
   res.json({ products });
 });
 
