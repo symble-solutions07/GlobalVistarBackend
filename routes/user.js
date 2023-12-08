@@ -118,11 +118,9 @@ router.get("/products", authenticateJwt, async (req, res) => {
   res.json({ products });
 });
 router.get("/ProductDetails/:productID", async (req, res) => {
-  var id = new mongoose.Types.ObjectId(req.params.productID);
-
-  const product = await Products.findById(id);
-  // const products = await Products.find({ verified: true });
-  console.log(id);
+  const productId = req.params.productID;
+  const product = await FinalProducts.findById(productId);
+  console.log(product);
   res.json({ product });
 });
 router.get("/allProducts", async (req, res) => {
@@ -131,7 +129,8 @@ router.get("/allProducts", async (req, res) => {
 });
 
 router.post("/products/:productID", authenticateJwt, async (req, res) => {
-  const product = await Products.findById(req.params.productID);
+  const productId = req.params.productID;
+  const product = await FinalProducts.findById(productId);
   console.log(product);
   if (product) {
     const product = await User.findOne({ username: req.user.username });

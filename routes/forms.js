@@ -6,7 +6,13 @@ const fs = require("fs");
 const path = require("path");
 const cloudinary = require("cloudinary").v2;
 
-const { SemiFinalProduct, Company } = require("../db");
+const { authenticateJwt } = require("../middleware/auth");
+const {
+  SemiFinalProduct,
+  Company,
+  FinalProducts,
+  Manufacturer,
+} = require("../db");
 const app = express();
 const router = express.Router();
 // mongoose.connect(
@@ -76,88 +82,169 @@ function deleteFileAfterDelay(filePath) {
     });
   }, 3000);
 }
-router.post("/upload", upload.single("file"), async (req, res) => {
-  const {
-    pNumber,
-    pName,
-    AboutCompany,
-    GST,
-    YearPresence,
-    DistributionLocations,
-    shipping,
-    RnR,
-    Storage,
-    Sampling,
-    TPMWhiteLabelling,
-    pLife,
-    manufac,
-    capa,
-    pType,
-    pSize,
-  } = req.body;
-  console.log(
-    pNumber,
-    pName,
-    AboutCompany,
-    GST,
-    YearPresence,
-    DistributionLocations,
-    shipping,
-    RnR,
-    Storage,
-    Sampling,
-    TPMWhiteLabelling,
-    pLife,
-    manufac,
-    capa,
-    pType,
-    pSize
-  );
-  console.log(req.file);
-  let cloudinaryRes = await uploadToCloudinary(req.file.path);
-  console.log(cloudinaryRes);
-  console.log(cloudinaryRes["url"]);
-  const product = new Company({
-    pNumber,
-    pName,
-    AboutCompany,
-    GST,
-    YearPresence,
-    DistributionLocations,
-    shipping,
-    RnR,
-    Storage,
-    Sampling,
-    TPMWhiteLabelling,
-    pLife,
-    manufac,
-    capa,
-    pType,
-    pSize,
-    fssaiImage: cloudinaryRes["url"],
-  });
-  product.save();
-  res.json({ message: "Product added successfully" });
-});
-router.post("/addProduct", upload.single("file"), async (req, res) => {
-  const { name, userNumber, minOrderQuantity, price, expectedMargin } =
-    req.body;
-  console.log(req.body);
-  console.log(req.file);
-  let cloudinaryRes = await uploadToCloudinary(req.file.path);
-  console.log(cloudinaryRes);
-  console.log(cloudinaryRes["url"]);
-  const product = new SemiFinalProduct({
-    productName: name,
-    creator: userNumber,
-    imageLink: cloudinaryRes["url"],
-    price: price,
-    MoQ: minOrderQuantity,
-    margin: expectedMargin,
-  });
-  product.save();
-  res.json({ message: "Product added successfully" });
-});
+router.post(
+  "/addManufacturer",
+  authenticateJwt,
+  upload.single("file"),
+  async (req, res) => {
+    const {
+      UserNumber,
+      UserName,
+      UserEmail,
+      brandName,
+      BusinessName,
+      BusinessType,
+    } = req.body;
+    console.log(
+      UserNumber,
+      UserName,
+      UserEmail,
+      brandName,
+      BusinessName,
+      BusinessType
+    );
+    console.log(req.body);
+
+    const product = new Manufacturer({
+      UserNumber,
+      UserName,
+      UserEmail,
+      brandName,
+      BusinessName,
+      BusinessType,
+    });
+    product.save();
+    res.json({ message: "Product added successfully" });
+  }
+);
+router.post(
+  "/uploadCompanyDetails",
+  authenticateJwt,
+  upload.single("file"),
+  async (req, res) => {
+    const {
+      pNumber,
+      pName,
+      AboutCompany,
+      GST,
+      YearPresence,
+      DistributionLocations,
+      shipping,
+      RnR,
+      Storage,
+      Sampling,
+      TPMWhiteLabelling,
+      pLife,
+      manufac,
+      capa,
+      pType,
+      pSize,
+    } = req.body;
+    console.log(
+      pNumber,
+      pName,
+      AboutCompany,
+      GST,
+      YearPresence,
+      DistributionLocations,
+      shipping,
+      RnR,
+      Storage,
+      Sampling,
+      TPMWhiteLabelling,
+      pLife,
+      manufac,
+      capa,
+      pType,
+      pSize
+    );
+    console.log(req.body);
+    console.log(req.file);
+    let cloudinaryRes = await uploadToCloudinary(req.file.path);
+    console.log(cloudinaryRes);
+    console.log(cloudinaryRes["url"]);
+    const product = new Company({
+      pNumber,
+      pName,
+      AboutCompany,
+      GST,
+      YearPresence,
+      DistributionLocations,
+      shipping,
+      RnR,
+      Storage,
+      Sampling,
+      TPMWhiteLabelling,
+      pLife,
+      manufac,
+      capa,
+      pType,
+      pSize,
+      fssaiImage: cloudinaryRes["url"],
+    });
+    product.save();
+    res.json({ message: "Product added successfully" });
+  }
+);
+router.post(
+  "/addProduct",
+  authenticateJwt,
+  upload.single("image"),
+  async (req, res) => {
+    const {
+      ProductShelfLife,
+      ProductSizes,
+      ProductionLead,
+      StorageType,
+      SupplyCapacityPerMonth,
+      Type,
+      expectedMargin,
+      image,
+      minOrderQuantity,
+      minOrderQuantity2,
+      minOrderQuantity3,
+      name,
+      price,
+      price2,
+      price3,
+    } = req.body;
+    console.log(req.file);
+    try {
+      var cloudinaryRes = await uploadToCloudinary(req.file.path);
+
+      console.log("Cloudinary response:", cloudinaryRes);
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: "Error uploading to Cloudinary",
+        error: error.message,
+      });
+    }
+
+    console.log(cloudinaryRes["url"]);
+    const product = new FinalProducts({
+      title: name,
+      owner: req.number,
+      ProductShelfLife,
+      ProductSizes,
+      ProductionLead,
+      StorageType,
+      SupplyCapacityPerMonth,
+      Type,
+      expectedMargin,
+      image: cloudinaryRes["url"],
+      minOrderQuantity,
+      minOrderQuantity2,
+      minOrderQuantity3,
+      name,
+      price,
+      price2,
+      price3,
+    });
+    product.save();
+    res.json({ message: "Product added successfully" });
+  }
+);
 module.exports = router;
 // app.listen(3003, () => {
 //   console.log("started");

@@ -7,6 +7,14 @@ const userSchema = new mongoose.Schema({
   JoinedAs: String,
 });
 
+const ManufacturerSchema = new mongoose.Schema({
+  UserNumber: String,
+  UserName: String,
+  UserEmail: String,
+  brandName: String,
+  BusinessName: String,
+  BusinessType: String,
+});
 const product = new mongoose.Schema({
   nameOfProduct: String,
   moq1: Number,
@@ -34,33 +42,23 @@ const productDetails = new mongoose.Schema({
   productSize: String,
 });
 const finalProducts = new mongoose.Schema({
-  _id: mongoose.ObjectId,
   title: String,
-  margin: String,
-  moq: String,
-  price: String,
-  margin: String,
+  owner: String,
+  ProductSizes: String,
+  ProductionLead: String,
+  StorageType: String,
+  SupplyCapacityPerMonth: String,
+  Type: String,
+  expectedMargin: String,
   productimg1: String,
-  moq1: String,
-  moq1cost: String,
-  moq2: String,
-  moq2cost: String,
-  moq3: String,
-  moq3cost: String,
-  supplier: String,
-  locations: String,
-  marketexp: String,
-  shipping: String,
-  returns: String,
-  leadtime: String,
-  type: String,
-  packaging: String,
-  storage: String,
-  shelflife: String,
-  manufacturingplace: String,
-  supplyability: String,
-  samples: String,
-  manufacturing: String,
+  image2: String,
+  image3: String,
+  minOrderQuantity: String,
+  minOrderQuantity2: String,
+  minOrderQuantity3: String,
+  price1: String,
+  price2: String,
+  price3: String,
 });
 //products in add multiple products page.
 //cloudinary image link
@@ -100,6 +98,7 @@ const companyDetails = new mongoose.Schema({
 });
 const User = mongoose.model("User", userSchema);
 const Company = mongoose.model("Company", companyDetails);
+const Manufacturer = mongoose.model("Manufacturer", ManufacturerSchema);
 const Products = mongoose.model("Products", product);
 const ProductDetails = mongoose.model("ProductDetails", productDetails);
 const FinalProducts = mongoose.model("FinalProducts", finalProducts);
@@ -113,4 +112,5 @@ module.exports = {
   FinalProducts,
   EnquiryForm,
   SemiFinalProduct,
+  Manufacturer,
 };

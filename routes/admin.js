@@ -74,9 +74,10 @@ router.get("/allProducts", authenticateJwt, async (req, res) => {
   res.json({ products });
 });
 
-router.get("/product/:productId", authenticateJwt, async (req, res) => {
+router.get("/product/:productId", async (req, res) => {
   const productId = req.params.productId;
-  const product = await Products.findById(productId);
+  const product = await FinalProducts.findById(productId);
+  console.log(product)
   res.json({ product });
 });
 
