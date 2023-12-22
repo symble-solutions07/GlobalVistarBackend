@@ -15,14 +15,11 @@ const {
 } = require("../db");
 const app = express();
 const router = express.Router();
-// mongoose.connect(
-//   "mongodb+srv://symblesolutions:GlobalVistar2023@cluster0.wsgyalp.mongodb.net/exp"
-// );
 
 cloudinary.config({
-  cloud_name: "dwrlwv8gz",
-  api_key: "347916874514594",
-  api_secret: "iAeix3iBN2R8ln1zFDyKdGMbDzg",
+  cloud_name: "darvi8iej",
+  api_key: "256717274762731",
+  api_secret: "zhxPyCQ20J15mrWPZoby4E-9ZTA",
 });
 
 async function uploadToCloudinary(filePath) {
@@ -121,6 +118,7 @@ router.post(
   "/uploadCompanyDetails",
   authenticateJwt,
   upload.single("file"),
+  // uploadMultiple,
   async (req, res) => {
     const {
       pNumber,
@@ -164,7 +162,7 @@ router.post(
     console.log(cloudinaryRes);
     console.log(cloudinaryRes["url"]);
     const product = new Company({
-      pNumber,
+      pNumber: req.number,
       pName,
       AboutCompany,
       GST,
@@ -186,10 +184,13 @@ router.post(
     res.json({ message: "Product added successfully" });
   }
 );
+
+var uploadMultiple = upload.fields([{ name: "images", maxCount: 5 }]);
 router.post(
   "/addProduct",
   authenticateJwt,
   upload.single("image"),
+  // uploadMultiple,
   async (req, res) => {
     const {
       ProductShelfLife,
@@ -208,7 +209,9 @@ router.post(
       price2,
       price3,
     } = req.body;
-    console.log(req.file);
+    console.log(price);
+    // console.log(req.images);
+    // console.log(req.files.images);
     try {
       var cloudinaryRes = await uploadToCloudinary(req.file.path);
 
@@ -232,14 +235,15 @@ router.post(
       SupplyCapacityPerMonth,
       Type,
       expectedMargin,
-      image: cloudinaryRes["url"],
+      image1: cloudinaryRes["url"],
       minOrderQuantity,
       minOrderQuantity2,
       minOrderQuantity3,
       name,
-      price,
+      price1:price,
       price2,
       price3,
+      verified:false,
     });
     product.save();
     res.json({ message: "Product added successfully" });

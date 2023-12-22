@@ -51,6 +51,7 @@ const finalProducts = new mongoose.Schema({
   Type: String,
   expectedMargin: String,
   productimg1: String,
+  image1: String,
   image2: String,
   image3: String,
   minOrderQuantity: String,
@@ -59,6 +60,7 @@ const finalProducts = new mongoose.Schema({
   price1: String,
   price2: String,
   price3: String,
+  verified: Boolean,
 });
 //products in add multiple products page.
 //cloudinary image link

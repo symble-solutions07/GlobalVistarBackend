@@ -124,7 +124,7 @@ router.get("/ProductDetails/:productID", async (req, res) => {
   res.json({ product });
 });
 router.get("/allProducts", async (req, res) => {
-  const products = await FinalProducts.find({});
+  const products = await FinalProducts.find({ verified: true });
   res.json({ products });
 });
 
