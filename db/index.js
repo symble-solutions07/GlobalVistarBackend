@@ -46,6 +46,7 @@ const finalProducts = new mongoose.Schema({
   owner: String,
   ProductSizes: String,
   ProductionLead: String,
+  ProductShelfLife:String,
   StorageType: String,
   SupplyCapacityPerMonth: String,
   Type: String,

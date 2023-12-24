@@ -11,6 +11,7 @@ const {
 const router = express.Router();
 
 router.get("/manufacturer", authenticateJwt, async (req, res) => {
+  console.log("checking for " + req.number);
   const user = await Manufacturer.findOne({ UserNumber: req.number });
   console.log(user);
   if (!user) {
@@ -20,6 +21,7 @@ router.get("/manufacturer", authenticateJwt, async (req, res) => {
   res.json({ msg: "Filled" });
 });
 router.get("/company", authenticateJwt, async (req, res) => {
+  console.log("checking for " + req.number);
   const user = await Company.findOne({ pNumber: req.number });
   console.log(user);
   if (!user) {

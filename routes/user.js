@@ -2,7 +2,14 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const { authenticateJwt, SECRET } = require("../middleware/auth");
-const { User, Products, ProductDetails, FinalProducts } = require("../db");
+const {
+  User,
+  Products,
+  ProductDetails,
+  FinalProducts,
+  Company,
+  Manufacturer,
+} = require("../db");
 const router = express.Router();
 
 router.get("/me", authenticateJwt, async (req, res) => {
@@ -120,8 +127,22 @@ router.get("/products", authenticateJwt, async (req, res) => {
 router.get("/ProductDetails/:productID", async (req, res) => {
   const productId = req.params.productID;
   const product = await FinalProducts.findById(productId);
-  console.log(product);
-  res.json({ product });
+  if (!product) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+  const companyDetails = await Company.find({ pNumber: product.owner });
+  const ManufacturerDetails = await Manufacturer.find({
+    UserNumber: product.owner,
+  });
+  console.log(product, companyDetails[0], ManufacturerDetails[0]);
+  const combined = {
+    product,
+    companyDetails: companyDetails[0],
+    ManufacturerDetails: ManufacturerDetails[0],
+  };
+
+  console.log(combined);
+  res.json({ combined });
 });
 router.get("/allProducts", async (req, res) => {
   const products = await FinalProducts.find({ verified: true });

@@ -209,7 +209,7 @@ router.post(
       price2,
       price3,
     } = req.body;
-    console.log(price);
+    console.log(ProductShelfLife);
     // console.log(req.images);
     // console.log(req.files.images);
     try {
