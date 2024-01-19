@@ -1,5 +1,4 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const { authenticateJwt, SECRET } = require("../middleware/auth");
 const { User, EnquiryForm } = require("../db");
 const router = express.Router();

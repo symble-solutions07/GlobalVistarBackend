@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
+//this router is not being used. 
+
 const express = require("express");
-const { User, Products, Admin, FinalProducts } = require("../db");
+const { User,  Admin, FinalProducts } = require("../db");
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../middleware/auth");
 const { authenticateJwt } = require("../middleware/auth");

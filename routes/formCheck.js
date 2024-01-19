@@ -1,3 +1,9 @@
+// To know whether the user has already filled a form. 
+// If the user has already filled a particular form, go to next one.
+
+//Both these routes could be avoided if we add a property in user's document, denoting the current step he is at. 
+//Steps would be, manufacturerForm, companyDetails, addProduct. Then display that step's form.
+
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");

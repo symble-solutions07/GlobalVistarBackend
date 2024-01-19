@@ -1,6 +1,4 @@
 const express = require("express");
-// const mongoose = require("mongoose");
-// const cors = require("cors");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
@@ -8,12 +6,11 @@ const cloudinary = require("cloudinary").v2;
 
 const { authenticateJwt } = require("../middleware/auth");
 const {
-  SemiFinalProduct,
   Company,
   FinalProducts,
   Manufacturer,
 } = require("../db");
-const app = express();
+
 const router = express.Router();
 
 cloudinary.config({
@@ -21,10 +18,11 @@ cloudinary.config({
   api_key: "256717274762731",
   api_secret: "zhxPyCQ20J15mrWPZoby4E-9ZTA",
 });
-
+//upload a single image to cloudinary and delete the image after its done.
 async function uploadToCloudinary(filePath) {
   try {
-    const result = await cloudinary.uploader.upload(filePath);
+    const result = await cloudinary.uploader.upload(filePath); 
+    //transformation is supposed to add the globalvistar name on each photo, but this is not currently working.  
     cloudinary.image("cld-sample-5.jpg", {
       transformation: [
         { height: 800, width: 800, crop: "thumb" },
@@ -51,7 +49,7 @@ async function uploadToCloudinary(filePath) {
     throw error;
   }
 }
-
+// multer setup.
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "public/images");
@@ -79,6 +77,7 @@ function deleteFileAfterDelay(filePath) {
     });
   }, 3000);
 }
+//api of first form.
 router.post(
   "/addManufacturer",
   authenticateJwt,
@@ -114,6 +113,8 @@ router.post(
     res.json({ message: "Product added successfully" });
   }
 );
+
+//api of second form.
 router.post(
   "/uploadCompanyDetails",
   authenticateJwt,
@@ -185,7 +186,9 @@ router.post(
   }
 );
 
-var uploadMultiple = upload.fields([{ name: "images", maxCount: 5 }]);
+// var uploadMultiple = upload.fields([{ name: "images", maxCount: 5 }]);
+//adds one product.
+//to add multiple products, multiple POST requests are sent from frontend.
 router.post(
   "/addProduct",
   authenticateJwt,
@@ -250,6 +253,3 @@ router.post(
   }
 );
 module.exports = router;
-// app.listen(3003, () => {
-//   console.log("started");
-// });

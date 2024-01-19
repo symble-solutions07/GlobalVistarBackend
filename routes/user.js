@@ -1,6 +1,7 @@
+//this router exposes, 
+
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
 const { authenticateJwt, SECRET } = require("../middleware/auth");
 const {
   User,
@@ -11,7 +12,7 @@ const {
   Manufacturer,
 } = require("../db");
 const router = express.Router();
-
+//to return the user details, using the authenticateJwt.
 router.get("/me", authenticateJwt, async (req, res) => {
   const user = await User.findOne({ phoneNumber: req.number });
   console.log(user);
@@ -59,7 +60,7 @@ router.post("/login", async (req, res) => {
     res.status(403).json({ message: "User not found" });
   }
 });
-
+//this route is used before sending OTP to the user(on login page and signup page.)
 router.post("/check", async (req, res) => {
   const { phoneNumber } = req.body;
   const user = await User.findOne({ phoneNumber });
@@ -70,17 +71,13 @@ router.post("/check", async (req, res) => {
     res.status(403).json({ message: "User not found" });
   }
 });
+
 //addProduct route expects body to be in this form
 // title: String,
 // description: String,
 // price: Number,
 // moq: Number,
-async function addProductToDB(newProduct) {
-  newProduct.verified = false;
-  const product = new Products(newProduct);
-  await product.save();
-  if (product._id) return 1;
-}
+//deprecated. to be removed.
 router.post("/addProduct", async (req, res) => {
   console.log("adding product", req.body);
   req.body.verified = false;
@@ -100,30 +97,15 @@ router.post("/ProductDetails", async (req, res) => {
   productd.save();
   res.json("hello");
 });
-router.post("/addProducts", authenticateJwt, async (req, res) => {
-  try {
-    const products = req.body;
-    if (!Array.isArray(products) || products.length === 0) {
-      return res.status(400).send("Products should be a non-empty array.");
-    }
-    for (const product of products) {
-      product.verified = false;
-    }
 
-    const savedProducts = await Products.insertMany(products);
-
-    res.status(201).json(savedProducts);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
 
 router.get("/products", authenticateJwt, async (req, res) => {
   const products = await Products.find({ verified: true });
   console.log(products);
   res.json({ products });
 });
+
+//internal product page.
 router.get("/ProductDetails/:productID", async (req, res) => {
   const productId = req.params.productID;
   const product = await FinalProducts.findById(productId);
@@ -135,6 +117,7 @@ router.get("/ProductDetails/:productID", async (req, res) => {
     UserNumber: product.owner,
   });
   console.log(product, companyDetails[0], ManufacturerDetails[0]);
+  
   const combined = {
     product,
     companyDetails: companyDetails[0],
@@ -144,38 +127,18 @@ router.get("/ProductDetails/:productID", async (req, res) => {
   console.log(combined);
   res.json({ combined });
 });
+
 router.get("/allProducts", async (req, res) => {
   const products = await FinalProducts.find({ verified: true });
   res.json({ products });
 });
 
-router.post("/products/:productID", authenticateJwt, async (req, res) => {
-  const productId = req.params.productID;
-  const product = await FinalProducts.findById(productId);
-  console.log(product);
-  if (product) {
-    const product = await User.findOne({ username: req.user.username });
-    if (user) {
-      user.purchasedproducts.push(product);
-      await user.save();
-      res.json({ message: "product purchased successfully" });
-    } else {
-      res.status(403).json({ message: "User not found" });
-    }
-  } else {
-    res.status(404).json({ message: "product not found" });
-  }
+//to display featuredProducts on the homepage.
+router.get("/featuredProducts", async (req, res) => {
+  const products = await FinalProducts.find({ verified: true, featured:true });
+  res.json({ products });
 });
 
-router.get("/purchasedproducts", authenticateJwt, async (req, res) => {
-  const user = await User.findOne({ username: req.user.username }).populate(
-    "purchasedproducts"
-  );
-  if (user) {
-    res.json({ purchasedproducts: user.purchasedproducts || [] });
-  } else {
-    res.status(403).json({ message: "User not found" });
-  }
-});
+
 
 module.exports = router;

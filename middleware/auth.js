@@ -1,3 +1,7 @@
+//A middleware to authenticate the user based on the Authorization header.
+//Header must be in form of, 
+//bearer "jwtToken.from.localstorage"
+
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const SECRET = process.env.jwtSECRET;

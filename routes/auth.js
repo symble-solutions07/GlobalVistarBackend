@@ -1,15 +1,14 @@
-// const bodyParser = require("body-parser");
+// This Router will be used for authentication or Sending and verifying OTP, 
+// Used Twilio service.
+
 const express = require("express");
 const router = express.Router();
-
 require("dotenv").config();
-// app.use(express.json());
 
 const accountSid = process.env.accountSid;
 const authToken = process.env.authToken;
 const verifySid = process.env.verifySid;
 const client = require("twilio")(accountSid, authToken);
-const friendlyName = "Global Vistar";
 
 router.post("/sendOTP", (req, res) => {
   var { phoneNumber } = req.body;
@@ -21,7 +20,7 @@ router.post("/sendOTP", (req, res) => {
     .services(verifySid)
     .verifications.create({ to: phoneNumber, channel: "sms" })
     .then((verification) => {
-      console.log(verification);
+      // console.log(verification);
       res.json("OTP sent!");
     });
 });
@@ -35,7 +34,7 @@ router.post("/verifyOTP", (req, res) => {
     .verificationChecks.create({ to: phoneNumber, code: code })
     .then((response) => {
       // Object.assign(response, source);
-      console.log(response);
+      // console.log(response);
 
       res.json(response);
     });
