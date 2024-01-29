@@ -32,5 +32,5 @@ mongoose.connect(
   `mongodb+srv://symblesolutions:${MongoPassword}@cluster0.wsgyalp.mongodb.net/live`
 );
 app.listen(process.env.PORT || 3001, () => {
-  console.log(`App listening on port http://localhost:3001`);
+  console.log(`App listening on port http://localhost:${process.env.PORT||3001}`);
 });
