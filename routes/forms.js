@@ -5,11 +5,7 @@ const path = require("path");
 const cloudinary = require("cloudinary").v2;
 
 const { authenticateJwt } = require("../middleware/auth");
-const {
-  Company,
-  FinalProducts,
-  Manufacturer,
-} = require("../db");
+const { Company, FinalProducts, Manufacturer, User } = require("../db");
 
 const router = express.Router();
 
@@ -21,8 +17,8 @@ cloudinary.config({
 //upload a single image to cloudinary and delete the image after its done.
 async function uploadToCloudinary(filePath) {
   try {
-    const result = await cloudinary.uploader.upload(filePath); 
-    //transformation is supposed to add the globalvistar name on each photo, but this is not currently working.  
+    const result = await cloudinary.uploader.upload(filePath);
+    //transformation is supposed to add the globalvistar name on each photo, but this is not currently working.
     cloudinary.image("cld-sample-5.jpg", {
       transformation: [
         { height: 800, width: 800, crop: "thumb" },
@@ -161,8 +157,9 @@ router.post(
     console.log(req.file);
     let cloudinaryRes = await uploadToCloudinary(req.file.path);
     console.log(cloudinaryRes);
+
     console.log(cloudinaryRes["url"]);
-    const product = new Company({
+    const company = new Company({
       pNumber: req.number,
       pName,
       AboutCompany,
@@ -181,8 +178,8 @@ router.post(
       pSize,
       fssaiImage: cloudinaryRes["url"],
     });
-    product.save();
-    res.json({ message: "Product added successfully" });
+    company.save();
+    res.json({ message: "Company added successfully" });
   }
 );
 
@@ -212,7 +209,7 @@ router.post(
       price2,
       price3,
     } = req.body;
-    console.log(ProductShelfLife);
+    // console.log(ProductShelfLife);
     // console.log(req.images);
     // console.log(req.files.images);
     try {
@@ -226,11 +223,27 @@ router.post(
         error: error.message,
       });
     }
-
-    console.log(cloudinaryRes["url"]);
+    try {
+       var user = await User.find({
+         phoneNumber: req.number,
+       });
+       var manufacturer = await Manufacturer.find({
+         UserNumber: req.number,
+       });
+    } catch (error) {
+      res.status(200).json({
+        message:"Previous Forms not filled"
+      })
+    }
+   
+    console.log(user[0], manufacturer[0]);
+    // console.log(cloudinaryRes["url"]);
     const product = new FinalProducts({
       title: name,
       owner: req.number,
+      companyName: manufacturer[0].brandName,
+      joinedAs: user[0].JoinedAs,
+      ownerName: user[0].name,
       ProductShelfLife,
       ProductSizes,
       ProductionLead,
@@ -243,11 +256,12 @@ router.post(
       minOrderQuantity2,
       minOrderQuantity3,
       name,
-      price1:price,
+      price1: price,
       price2,
       price3,
-      verified:false,
+      verified: false,
     });
+    console.log(product);
     product.save();
     res.json({ message: "Product added successfully" });
   }

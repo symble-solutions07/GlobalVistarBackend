@@ -136,6 +136,7 @@ router.get("/allProducts", async (req, res) => {
 //to display featuredProducts on the homepage.
 router.get("/featuredProducts", async (req, res) => {
   const products = await FinalProducts.find({ verified: true, featured:true });
+  console.log(products);
   res.json({ products });
 });
 
