@@ -1,4 +1,4 @@
-//this router exposes, 
+//this router exposes,
 
 const express = require("express");
 const jwt = require("jsonwebtoken");
@@ -98,7 +98,6 @@ router.post("/ProductDetails", async (req, res) => {
   res.json("hello");
 });
 
-
 router.get("/products", authenticateJwt, async (req, res) => {
   const products = await Products.find({ verified: true });
   console.log(products);
@@ -117,7 +116,7 @@ router.get("/ProductDetails/:productID", async (req, res) => {
     UserNumber: product.owner,
   });
   console.log(product, companyDetails[0], ManufacturerDetails[0]);
-  
+
   const combined = {
     product,
     companyDetails: companyDetails[0],
@@ -135,11 +134,9 @@ router.get("/allProducts", async (req, res) => {
 
 //to display featuredProducts on the homepage.
 router.get("/featuredProducts", async (req, res) => {
-  const products = await FinalProducts.find({ verified: true, featured:true });
+  const products = await FinalProducts.find({ verified: true, featured: true });
   console.log(products);
   res.json({ products });
 });
-
-
 
 module.exports = router;

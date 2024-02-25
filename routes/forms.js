@@ -118,64 +118,50 @@ router.post(
   // uploadMultiple,
   async (req, res) => {
     const {
-      pNumber,
-      pName,
       AboutCompany,
+      WhatsApp,
       GST,
       YearPresence,
       DistributionLocations,
       shipping,
       RnR,
-      Storage,
       Sampling,
       TPMWhiteLabelling,
-      pLife,
+    
       manufac,
-      capa,
-      pType,
-      pSize,
     } = req.body;
     console.log(
-      pNumber,
-      pName,
+      WhatsApp,
       AboutCompany,
       GST,
       YearPresence,
       DistributionLocations,
       shipping,
       RnR,
-      Storage,
+      
       Sampling,
       TPMWhiteLabelling,
-      pLife,
+      
       manufac,
-      capa,
-      pType,
-      pSize
     );
     console.log(req.body);
-    console.log(req.file);
+    // console.log(req.file);
     let cloudinaryRes = await uploadToCloudinary(req.file.path);
-    console.log(cloudinaryRes);
+    // console.log(cloudinaryRes);
 
-    console.log(cloudinaryRes["url"]);
+    // console.log(cloudinaryRes["url"]);
     const company = new Company({
       pNumber: req.number,
-      pName,
+      WhatsApp,
       AboutCompany,
       GST,
       YearPresence,
       DistributionLocations,
       shipping,
       RnR,
-      Storage,
       Sampling,
       TPMWhiteLabelling,
-      pLife,
       manufac,
-      capa,
-      pType,
-      pSize,
       fssaiImage: cloudinaryRes["url"],
     });
     company.save();

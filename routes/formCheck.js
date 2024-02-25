@@ -1,7 +1,7 @@
-// To know whether the user has already filled a form. 
+// To know whether the user has already filled a form.
 // If the user has already filled a particular form, go to next one.
 
-//Both these routes could be avoided if we add a property in user's document, denoting the current step he is at. 
+//Both these routes could be avoided if we add a property in user's document, denoting the current step he is at.
 //Steps would be, manufacturerForm, companyDetails, addProduct. Then display that step's form.
 
 const express = require("express");
@@ -28,13 +28,17 @@ router.get("/manufacturer", authenticateJwt, async (req, res) => {
 });
 router.get("/company", authenticateJwt, async (req, res) => {
   console.log("checking for " + req.number);
-  const user = await Company.findOne({ pNumber: req.number });
-  console.log(user);
-  if (!user) {
-    res.json({ msg: "Empty" });
-    return;
+  try {
+    const user = await Company.findOne({ pNumber: req.number });
+    console.log(user);
+    if (!user) {
+      res.json({ msg: "Empty" });
+      return;
+    }
+    res.json({ msg: "Filled" });
+  } catch (error) {
+    res.status(405).json({ message: "not Found"+error });
   }
-  res.json({ msg: "Filled" });
 });
 
 module.exports = router;

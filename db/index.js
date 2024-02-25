@@ -103,6 +103,7 @@ const companyDetails = new mongoose.Schema(
   {
     pNumber: String,
     pName: String,
+    WhatsApp:String,
     AboutCompany: String,
     GST: String,
     YearPresence: String,

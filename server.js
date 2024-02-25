@@ -10,6 +10,7 @@ const authRouter = require("./routes/auth");
 const enquiryRouter = require("./routes/enquiry");
 const FormRouter = require("./routes/forms");
 const FormCheckRouter = require("./routes/formCheck");
+const FilterRouter = require("./routes/filters");
 require("dotenv").config();
 
 const MongoPassword = process.env.MongoPassword;
@@ -23,6 +24,7 @@ app.use("/dashboard", dashboardRouter);
 app.use("/enquire", enquiryRouter);
 app.use("/form", FormRouter);
 app.use("/formCheck", FormCheckRouter);
+app.use("/filter", FilterRouter);
 
 app.get("/", (req, res) => {
   res.send("Global Vistar Backend");
